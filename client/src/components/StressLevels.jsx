@@ -13,7 +13,7 @@ function StressLevels() {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`/api/user-data/${user._id}`);
+      const response = await axios.get(`https://mindmend.onrender.com/api/user-data/${user._id}`);
       setEntries(response.data.stressLevels || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -25,7 +25,7 @@ function StressLevels() {
     if (stressLevel) {
       const newEntry = { stressLevel, date: new Date() };
       try {
-        const response = await axios.post(`/api/user-data/${user._id}/stress`, newEntry);
+        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/stress`, newEntry);
         setEntries(response.data.stressLevels);
         setStressLevel(5);
       } catch (error) {

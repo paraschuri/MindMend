@@ -23,7 +23,7 @@ function Forum() {
     e.preventDefault();
     if (newPost) {
       try {
-        const response = await axios.post('/api/forum', { user:user.name, text: newPost });
+        const response = await axios.post('https://mindmend.onrender.com/api/forum', { user:user.name, text: newPost });
         setPosts([response.data, ...posts]);
         setNewPost('');
       } catch (error) {
@@ -34,7 +34,7 @@ function Forum() {
 
   const handleLike = async (postId) => {
     try {
-      const response = await axios.patch(`/api/forum/${postId}/like`, { user:user.name });
+      const response = await axios.patch(`https://mindmend.onrender.com/api/forum/${postId}/like`, { user:user.name });
       setPosts(posts.map(post => (post._id === postId ? response.data : post)));
     } catch (error) {
       console.error('Error liking post:', error);

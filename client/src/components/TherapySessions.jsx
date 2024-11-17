@@ -13,7 +13,7 @@ function TherapySessions() {
 
   const fetchSessions = async () => {
     try {
-      const response = await axios.get(`/api/user-data/${user._id}`);
+      const response = await axios.get(`https://mindmend.onrender.com/api/user-data/${user._id}`);
       setSessions(response.data.therapySessions || []);
     } catch (error) {
       console.error('Error fetching sessions:', error);
@@ -25,7 +25,7 @@ function TherapySessions() {
     if (sessionNotes) {
       const newSession = { sessionNotes, date: new Date() };
       try {
-        const response = await axios.post(`/api/user-data/${user._id}/therapy`, newSession);
+        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/therapy`, newSession);
         setSessions(response.data.therapySessions);
         setSessionNotes('');
       } catch (error) {

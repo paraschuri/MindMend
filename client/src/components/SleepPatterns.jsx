@@ -14,7 +14,7 @@ function SleepPatterns() {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`/api/user-data/${user._id}`);
+      const response = await axios.get(`https://mindmend.onrender.com/api/user-data/${user._id}`);
       setEntries(response.data.sleepPatterns || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -26,7 +26,7 @@ function SleepPatterns() {
     if (hoursSlept) {
       const newEntry = { hoursSlept, quality, date: new Date() };
       try {
-        const response = await axios.post(`/api/user-data/${user._id}/sleep`, newEntry);
+        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/sleep`, newEntry);
         setEntries(response.data.sleepPatterns);
         setHoursSlept('');
         setQuality('Good');

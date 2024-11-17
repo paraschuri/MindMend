@@ -14,7 +14,7 @@ function Exercise() {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`/api/user-data/${user._id}`);
+      const response = await axios.get(`https://mindmend.onrender.com/api/user-data/${user._id}`);
       setEntries(response.data.exercises || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -26,7 +26,7 @@ function Exercise() {
     if (exercise && duration) {
       const newEntry = { exercise, duration, date: new Date() };
       try {
-        const response = await axios.post(`/api/user-data/${user._id}/exercise`, newEntry);
+        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/exercise`, newEntry);
         setEntries(response.data.exercises);
         setExercise('');
         setDuration('');

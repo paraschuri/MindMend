@@ -25,7 +25,7 @@ function Chatbot() {
 
       try {
         // Send request to your backend API
-        const response = await axios.post('/api/chatbot/chat', { input });
+        const response = await axios.post('https://mindmend.onrender.com/api/chatbot/chat', { input });
 
         const botResponse = response.data.text;
 

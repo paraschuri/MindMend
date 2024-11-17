@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   // Login Function
   const login = async (email, password) => {
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
+      const res = await axios.post('https://mindmend.onrender.com/api/auth/login', { email, password });
       setUser({
         email,
         token: res.data.token,
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   // Signup Function
   const signup = async (email, password, name) => {
     try {
-      await axios.post('/api/auth/register', { email, password, name });
+      await axios.post('https://mindmend.onrender.com/api/auth/register', { email, password, name });
       await login(email, password, name);
     } catch (err) {
       throw new Error(err.response.data.error || 'Signup failed');

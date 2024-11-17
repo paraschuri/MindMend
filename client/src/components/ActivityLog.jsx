@@ -12,7 +12,7 @@ function ActivityLog() {
 
   const fetchActivities = async () => {
     try {
-      const response = await axios.get(`/api/user-data/${user._id}`);
+      const response = await axios.get(`https://mindmend.onrender.com/api/user-data/${user._id}`);
       setActivities(response.data.activityLogs || []);
     } catch (error) {
       console.error('Error fetching activities:', error);
@@ -24,7 +24,7 @@ function ActivityLog() {
     if (activity) {
       const newActivity = { activity, date: new Date() };
       try {
-        const response = await axios.post(`/api/user-data/${user._id}/activity`, newActivity);
+        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/activity`, newActivity);
         setActivities(response.data.activityLogs);
         setActivity('');
       } catch (error) {
