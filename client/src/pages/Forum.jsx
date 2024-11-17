@@ -12,7 +12,7 @@ function Forum() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/forum');
+      const response = await axios.get('/api/forum');
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -23,7 +23,7 @@ function Forum() {
     e.preventDefault();
     if (newPost) {
       try {
-        const response = await axios.post('http://localhost:5000/api/forum', { user:user.name, text: newPost });
+        const response = await axios.post('/api/forum', { user:user.name, text: newPost });
         setPosts([response.data, ...posts]);
         setNewPost('');
       } catch (error) {
@@ -34,7 +34,7 @@ function Forum() {
 
   const handleLike = async (postId) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/forum/${postId}/like`, { user:user.name });
+      const response = await axios.patch(`/api/forum/${postId}/like`, { user:user.name });
       setPosts(posts.map(post => (post._id === postId ? response.data : post)));
     } catch (error) {
       console.error('Error liking post:', error);
@@ -43,7 +43,7 @@ function Forum() {
 
   const handleCommentSubmit = async (postId, comment) => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/forum/${postId}/comment`, { user:user.name, text: comment });
+      const response = await axios.post(`/api/forum/${postId}/comment`, { user:user.name, text: comment });
       setPosts(posts.map(post => (post._id === postId ? response.data : post)));
     } catch (error) {
       console.error('Error commenting on post:', error);

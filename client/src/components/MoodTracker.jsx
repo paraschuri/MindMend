@@ -13,7 +13,7 @@ function MoodTracker() {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/user-data/${user._id}`);
+      const response = await axios.get(`/api/user-data/${user._id}`);
       setEntries(response.data.moodEntries || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -25,7 +25,7 @@ function MoodTracker() {
     if (mood) {
       const newEntry = { mood, date: new Date() };
       try {
-        const response = await axios.post(`http://localhost:5000/api/user-data/${user._id}/mood`, newEntry);
+        const response = await axios.post(`/api/user-data/${user._id}/mood`, newEntry);
         setEntries(response.data.moodEntries);
         setMood('');
       } catch (error) {

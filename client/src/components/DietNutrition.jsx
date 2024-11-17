@@ -13,7 +13,7 @@ function DietNutrition() {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/user-data/${user._id}`);
+      const response = await axios.get(`/api/user-data/${user._id}`);
       setEntries(response.data.dietNutrition || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -25,7 +25,7 @@ function DietNutrition() {
     if (foodItem) {
       const newEntry = { foodItem, date: new Date() };
       try {
-        const response = await axios.post(`http://localhost:5000/api/user-data/${user._id}/diet`, newEntry);
+        const response = await axios.post(`/api/user-data/${user._id}/diet`, newEntry);
         setEntries(response.data.dietNutrition);
         setFoodItem('');
       } catch (error) {
