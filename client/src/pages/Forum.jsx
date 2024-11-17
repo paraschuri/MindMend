@@ -12,7 +12,7 @@ function Forum() {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('/api/forum');
+      const response = await axios.get('https://mindmend.onrender.com/api/forum');
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -43,7 +43,7 @@ function Forum() {
 
   const handleCommentSubmit = async (postId, comment) => {
     try {
-      const response = await axios.post(`/api/forum/${postId}/comment`, { user:user.name, text: comment });
+      const response = await axios.post(`https://mindmend.onrender.com/api/forum/${postId}/comment`, { user:user.name, text: comment });
       setPosts(posts.map(post => (post._id === postId ? response.data : post)));
     } catch (error) {
       console.error('Error commenting on post:', error);
