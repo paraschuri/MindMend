@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 function StressLevels() {
   const [stressLevel, setStressLevel] = useState(5);
   const [entries, setEntries] = useState([]);
+  const [error, setError] = useState('');
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -22,15 +23,18 @@ function StressLevels() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (stressLevel) {
-      const newEntry = { stressLevel, date: new Date() };
-      try {
-        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/stress`, newEntry);
-        setEntries(response.data.stressLevels);
-        setStressLevel(5);
-      } catch (error) {
-        console.error('Error adding entry:', error);
-      }
+    if (!stressLevel || stressLevel < 1 || stressLevel > 10) {
+      setError('Stress level must be between 1 and 10.');
+      return;
+    }
+    setError('');
+    const newEntry = { stressLevel, date: new Date() };
+    try {
+      const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/stress`, newEntry);
+      setEntries(response.data.stressLevels);
+      setStressLevel(5);
+    } catch (error) {
+      console.error('Error adding entry:', error);
     }
   };
 
@@ -39,6 +43,7 @@ function StressLevels() {
       <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-4 text-blue-400">Stress Levels</h2>
         <form onSubmit={handleSubmit} className="mb-6">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <label className="block mb-2 text-gray-300">Rate your stress level (1-10):</label>
           <input
             type="number"

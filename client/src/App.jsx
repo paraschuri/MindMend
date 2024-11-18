@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -21,6 +21,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import PrivateRoute from './components/PrivateRoute';
 import Forum from './pages/Forum';
+
 
 function App(){
   return (
@@ -56,8 +57,21 @@ function App(){
 
 function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <h1 className="text-4xl font-bold text-gray-800">404 - Page Not Found</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-300">
+      <div className="max-w-2xl mx-auto bg-gray-800 p-12 rounded-lg shadow-lg text-center">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 mt-6 text-blue-400">
+          404 - Page Not Found
+        </h1>
+        <p className="text-lg md:text-xl mb-8 text-gray-400">
+          Sorry, the page you are looking for does not exist.
+        </p>
+        <Link
+          to="/"
+          className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold hover:bg-blue-600 transition duration-300 shadow-lg"
+        >
+          Go to Home
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import '../index.css'; // Import the CSS file
+import '../index.css';
 
 function Chatbot() {
   const [messages, setMessages] = useState([
     { sender: 'bot', text: 'Hello! How can I assist you today?' },
   ]);
   const [input, setInput] = useState('');
+  const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
 
   // Scroll to the latest message
@@ -15,36 +16,39 @@ function Chatbot() {
   }, [messages]);
 
   const handleSend = async () => {
-    if (input.trim()) {
-      // Add user message to the chat
-      const userMessage = { sender: 'user', text: input };
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
+    if (!input.trim()) {
+      setError('Message cannot be empty.');
+      return;
+    }
+    setError('');
+    // Add user message to the chat
+    const userMessage = { sender: 'user', text: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-      // Clear input field
-      setInput('');
+    // Clear input field
+    setInput('');
 
-      try {
-        // Send request to your backend API
-        const response = await axios.post('https://mindmend.onrender.com/api/chatbot/chat', { input });
+    try {
+      // Send request to your backend API
+      const response = await axios.post('https://mindmend.onrender.com/api/chatbot/chat', { input });
 
-        const botResponse = response.data.text;
+      const botResponse = response.data.text;
 
-        // Add bot response to the chat
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: 'bot', text: botResponse },
-        ]);
+      // Add bot response to the chat
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: 'bot', text: botResponse },
+      ]);
 
-      } catch (error) {
-        console.error('Error fetching response:', error);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            sender: 'bot',
-            text: 'Sorry, something went wrong. Please try again later.',
-          },
-        ]);
-      }
+    } catch (error) {
+      console.error('Error fetching response:', error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          sender: 'bot',
+          text: 'Sorry, something went wrong. Please try again later.',
+        },
+      ]);
     }
   };
 
@@ -83,21 +87,24 @@ function Chatbot() {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        <div className="p-4 border-t border-gray-700 flex items-center bg-gray-800">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="flex-grow px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-l-full focus:outline-none"
-            placeholder="Type your message..."
-          />
-          <button
-            onClick={handleSend}
-            className="bg-blue-500 text-white px-4 py-2 rounded-r-full hover:bg-blue-600 focus:outline-none flex items-center"
-          >
-            Send
-          </button>
+        <div className="p-4 border-t border-gray-700 flex flex-col bg-gray-800">
+          {error && <p className="text-red-500 mb-2">{error}</p>}
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="flex-grow px-4 py-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-l-full focus:outline-none"
+              placeholder="Type your message..."
+            />
+            <button
+              onClick={handleSend}
+              className="bg-blue-500 text-white px-4 py-2 rounded-r-full hover:bg-blue-600 focus:outline-none flex items-center"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

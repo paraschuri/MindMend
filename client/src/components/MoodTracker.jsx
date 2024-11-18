@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 function MoodTracker() {
   const [mood, setMood] = useState('');
   const [entries, setEntries] = useState([]);
+  const [error, setError] = useState('');
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -22,15 +23,18 @@ function MoodTracker() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (mood) {
-      const newEntry = { mood, date: new Date() };
-      try {
-        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/mood`, newEntry);
-        setEntries(response.data.moodEntries);
-        setMood('');
-      } catch (error) {
-        console.error('Error adding entry:', error);
-      }
+    if (!mood.trim()) {
+      setError('Mood cannot be empty.');
+      return;
+    }
+    setError('');
+    const newEntry = { mood, date: new Date() };
+    try {
+      const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/mood`, newEntry);
+      setEntries(response.data.moodEntries);
+      setMood('');
+    } catch (error) {
+      console.error('Error adding entry:', error);
     }
   };
 
@@ -39,6 +43,7 @@ function MoodTracker() {
       <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-4 text-blue-400">Mood Tracker</h2>
         <form onSubmit={handleSubmit} className="mb-6">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <label className="block mb-2 text-gray-300">How are you feeling today?</label>
           <input
             type="text"

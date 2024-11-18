@@ -6,6 +6,7 @@ function Exercise() {
   const [exercise, setExercise] = useState('');
   const [duration, setDuration] = useState('');
   const [entries, setEntries] = useState([]);
+  const [error, setError] = useState('');
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,16 +24,19 @@ function Exercise() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (exercise && duration) {
-      const newEntry = { exercise, duration, date: new Date() };
-      try {
-        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/exercise`, newEntry);
-        setEntries(response.data.exercises);
-        setExercise('');
-        setDuration('');
-      } catch (error) {
-        console.error('Error adding entry:', error);
-      }
+    if (!exercise.trim() || !duration.trim()) {
+      setError('Exercise and duration cannot be empty.');
+      return;
+    }
+    setError('');
+    const newEntry = { exercise, duration, date: new Date() };
+    try {
+      const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/exercise`, newEntry);
+      setEntries(response.data.exercises);
+      setExercise('');
+      setDuration('');
+    } catch (error) {
+      console.error('Error adding entry:', error);
     }
   };
 
@@ -41,6 +45,7 @@ function Exercise() {
       <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-4 text-blue-400">Exercise</h2>
         <form onSubmit={handleSubmit} className="mb-6">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <label className="block mb-2 text-gray-300">Exercise Performed:</label>
           <input
             type="text"

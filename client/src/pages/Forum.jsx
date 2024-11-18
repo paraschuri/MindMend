@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 function Forum() {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState('');
+    const [error, setError] = useState('');
     const { user } = useContext(AuthContext);
   useEffect(() => {
     fetchPosts();
@@ -19,19 +20,6 @@ function Forum() {
     }
   };
 
-  const handlePostSubmit = async (e) => {
-    e.preventDefault();
-    if (newPost) {
-      try {
-        const response = await axios.post('https://mindmend.onrender.com/api/forum', { user:user.name, text: newPost });
-        setPosts([response.data, ...posts]);
-        setNewPost('');
-      } catch (error) {
-        console.error('Error creating post:', error);
-      }
-    }
-  };
-
   const handleLike = async (postId) => {
     try {
       const response = await axios.patch(`https://mindmend.onrender.com/api/forum/${postId}/like`, { user:user.name });
@@ -41,12 +29,19 @@ function Forum() {
     }
   };
 
-  const handleCommentSubmit = async (postId, comment) => {
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    if (!newPost.trim()) {
+      setError('Post content cannot be empty.');
+      return;
+    }
+    setError('');
     try {
-      const response = await axios.post(`https://mindmend.onrender.com/api/forum/${postId}/comment`, { user:user.name, text: comment });
-      setPosts(posts.map(post => (post._id === postId ? response.data : post)));
+      const response = await axios.post('https://mindmend.onrender.com/api/forum', { user: user.name, text: newPost });
+      setPosts([response.data, ...posts]);
+      setNewPost('');
     } catch (error) {
-      console.error('Error commenting on post:', error);
+      console.error('Error creating post:', error);
     }
   };
 
@@ -57,6 +52,7 @@ function Forum() {
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
           <h2 className="text-3xl font-bold mb-4 text-blue-400">Create a Post</h2>
           <form onSubmit={handlePostSubmit} className="mb-6">
+            {error && <p className="text-red-500 mb-4">{error}</p>}
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
@@ -72,7 +68,6 @@ function Forum() {
             </button>
           </form>
         </div>
-
         {/* Posts Section */}
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold mb-4 text-blue-400">Forum</h2>

@@ -6,6 +6,7 @@ function SleepPatterns() {
   const [hoursSlept, setHoursSlept] = useState('');
   const [quality, setQuality] = useState('Good');
   const [entries, setEntries] = useState([]);
+  const [error, setError] = useState('');
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -23,16 +24,19 @@ function SleepPatterns() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (hoursSlept) {
-      const newEntry = { hoursSlept, quality, date: new Date() };
-      try {
-        const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/sleep`, newEntry);
-        setEntries(response.data.sleepPatterns);
-        setHoursSlept('');
-        setQuality('Good');
-      } catch (error) {
-        console.error('Error adding entry:', error);
-      }
+    if (!hoursSlept.trim()) {
+      setError('Hours slept cannot be empty.');
+      return;
+    }
+    setError('');
+    const newEntry = { hoursSlept, quality, date: new Date() };
+    try {
+      const response = await axios.post(`https://mindmend.onrender.com/api/user-data/${user._id}/sleep`, newEntry);
+      setEntries(response.data.sleepPatterns);
+      setHoursSlept('');
+      setQuality('Good');
+    } catch (error) {
+      console.error('Error adding entry:', error);
     }
   };
 
@@ -41,6 +45,7 @@ function SleepPatterns() {
       <div className="max-w-2xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-4 text-blue-400">Sleep Patterns</h2>
         <form onSubmit={handleSubmit} className="mb-6">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <label className="block mb-2 text-gray-300">How many hours did you sleep?</label>
           <input
             type="number"
