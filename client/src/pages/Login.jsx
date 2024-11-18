@@ -11,6 +11,7 @@ function Login() {
     password: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,11 +19,13 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await login(form.email, form.password);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -60,9 +63,12 @@ function Login() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            className={`w-full py-2 rounded-lg transition duration-300 ${
+              loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+            } text-white`}
+            disabled={loading}
           >
-            Login
+            {loading?'Logging in...':'Login'} 
           </button>
         </form>
         <p className="mt-4 text-center text-gray-400">
